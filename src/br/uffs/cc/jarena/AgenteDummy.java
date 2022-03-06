@@ -52,6 +52,6 @@ public class AgenteDummy extends Agente
 	
 	public String getEquipe() {
 		// Definimos que o nome da equipe do agente é "Fernando".
-		return "Fernando";
+		return "Eduardo & Eduardo";
 	}
 }
