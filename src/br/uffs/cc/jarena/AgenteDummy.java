@@ -22,7 +22,9 @@ public class AgenteDummy extends Agente
 		if(!podeMoverPara(getDirecao())) {
 			// Como não conseguimos nos mover, vamos escolher uma direção
 			// nova.
+
 			setDirecao(geraDirecaoAleatoria());
+			
 		}
 		
 		// Se o agente conseguie se dividir (tem energia) e se o total de energia
@@ -35,6 +37,7 @@ public class AgenteDummy extends Agente
 	
 	public void recebeuEnergia() {
 		// Invocado sempre que o agente recebe energia.
+		
 	}
 	
 	public void tomouDano(int energiaRestanteInimigo) {
