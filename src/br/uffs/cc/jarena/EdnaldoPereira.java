@@ -1,73 +1,83 @@
 package br.uffs.cc.jarena;
 
 public class EdnaldoPereira extends Agente {
-	private int OPOSTO_DIREITA = ESQUERDA;
-	private int OPOSTO_ESQUERDA = DIREITA;
-	private int OPOSTO_BAIXO = CIMA;
-	private int OPOSTO_CIMA = BAIXO;
-
-	private static int numeroDeRodadas = 0;
+	private int direcao;
+	private long horaProximoEstado;
 
 	public EdnaldoPereira(Integer x, Integer y, Integer energia) {
 		super(x, y, energia);
-		setDirecao(geraDirecaoAleatoria());
+
+		direcao = DIREITA;
+		horaProximoEstado = 0;
 	}
 
 	public void pensa() {
-		lidaComFinalDoMapa(getDirecao());
+		this.movimenta();
+	}
 
-		decideMovimento();
+	private void movimenta() {
+		long tempoAgora = System.currentTimeMillis();
+		long tempoRestanteMudarEstado = horaProximoEstado - tempoAgora;
 
-		// Se o agente conseguie se dividir (tem energia) e se o total de energia
-		// do agente é maior que 400, nos dividimos. O agente filho terá a metade
-		// da nossa energia atual.
-		if (podeDividir() && getEnergia() >= 400) {
-			divide();
+		decideEstrategia(tempoRestanteMudarEstado);
+
+		if (podeMoverPara(direcao))
+			setDirecao(direcao);
+
+		if (tempoRestanteMudarEstado <= 0) {
+			int tempoAndando = 2000;
+
+			horaProximoEstado = tempoAgora + tempoAndando;
 		}
 	}
 
-	private void lidaComFinalDoMapa(int direcao) {
-		if (!podeMoverPara(direcao)) {
-			if (direcao == ESQUERDA) {
-				setDirecao(OPOSTO_ESQUERDA);
-			} else if (direcao == DIREITA) {
-				setDirecao(OPOSTO_DIREITA);
-			} else if (direcao == CIMA) {
-				setDirecao(OPOSTO_CIMA);
-			} else if (direcao == BAIXO) {
-				setDirecao(OPOSTO_BAIXO);
-			}
-		}
-	}
+	private void decideEstrategia(long tempoRestanteMudarEstado) {
+		direcao = NENHUMA_DIRECAO;
 
-	private void decideMovimento() {
-		numeroDeRodadas++;
-
-		if (numeroDeRodadas < 2000) {
-			para();
-		} else {
-			if (numeroDeRodadas % 2 == 0) {
-				setDirecao(DIREITA);
+		if (getX() <= Constants.LARGURA_MAPA - 100) {
+			if (tempoRestanteMudarEstado < 1200) {
+				direcao = DIREITA;
 			} else {
-				setDirecao(BAIXO);
+				direcao = BAIXO;
 			}
+		} else if (getY() > Constants.ALTURA_MAPA / 2) {
+			if (tempoRestanteMudarEstado < 1200) {
+				direcao = DIREITA;
+			} else {
+				direcao = CIMA;
+			}
+		} 
+
+		if (getX() >= 200 && tempoRestanteMudarEstado < 400) {
+			direcao = geraDirecaoAleatoria();
+		}
+
+		if(getX() >= Constants.LARGURA_MAPA - 50) {
+			direcao = ESQUERDA;
+		} else if(getX() <= 50) {
+			direcao = DIREITA;
+		}
+
+		if(getY() >= Constants.ALTURA_MAPA - 50) {
+			direcao = CIMA;
+		} else if (getY() <= 50) {
+			direcao = BAIXO;
 		}
 	}
 
 	public void recebeuEnergia() {
-		// Invocado sempre que o agente recebe energia.
-
+		if (podeDividir() && getEnergia() > 1000) {
+			divide();
+		}
 	}
 
 	public void tomouDano(int energiaRestanteInimigo) {
-		// Invocado quando o agente está na mesma posição que um agente inimigo
-		// e eles estão batalhando (ambos tomam dano).
-
+		if (getEnergia() > energiaRestanteInimigo)
+			para();
 	}
 
 	public void ganhouCombate() {
-		// Invocado se estamos batalhando e nosso inimigo morreu.
-
+		para();
 	}
 
 	public void recebeuMensagem(String msg) {
