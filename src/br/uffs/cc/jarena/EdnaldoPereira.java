@@ -9,14 +9,14 @@ public class EdnaldoPereira extends Agente {
 
 		direcao = DIREITA;
 		horaProximoEstado = 0;
-
-		if (podeDividir() && getEnergia() > 1200) {
-			divide();
-		}
 	}
 
 	public void pensa() {
 		this.movimenta();
+
+		if (podeDividir() && getEnergia() > 1200) {
+			divide();
+		}
 	}
 
 	private void movimenta() {
