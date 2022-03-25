@@ -34,7 +34,7 @@ public class EdnaldoPereira extends Agente {
 	private void decideEstrategia(long tempoRestanteMudarEstado) {
 		direcao = NENHUMA_DIRECAO;
 
-		if (getX() <= Constants.LARGURA_MAPA - 100) {
+		if (getX() <= Constants.LARGURA_MAPA / 2.5) {
 			if (tempoRestanteMudarEstado < 1200) {
 				direcao = DIREITA;
 			} else {
