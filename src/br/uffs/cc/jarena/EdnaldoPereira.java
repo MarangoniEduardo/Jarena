@@ -9,6 +9,10 @@ public class EdnaldoPereira extends Agente {
 
 		direcao = DIREITA;
 		horaProximoEstado = 0;
+
+		if (podeDividir() && getEnergia() > 1200) {
+			divide();
+		}
 	}
 
 	public void pensa() {
@@ -21,13 +25,19 @@ public class EdnaldoPereira extends Agente {
 
 		decideEstrategia(tempoRestanteMudarEstado);
 
-		if (podeMoverPara(direcao))
-			setDirecao(direcao);
+		if (!isParado() && podeMoverPara(direcao)) setDirecao(direcao);
 
 		if (tempoRestanteMudarEstado <= 0) {
 			int tempoAndando = 2000;
+			int tempoParado = 1200;
 
-			horaProximoEstado = tempoAgora + tempoAndando;
+			if(!isParado()) {
+				para();
+			} else {
+				setDirecao(direcao);
+			}
+
+			horaProximoEstado = tempoAgora + (isParado() ? tempoParado : tempoAndando);
 		}
 	}
 
