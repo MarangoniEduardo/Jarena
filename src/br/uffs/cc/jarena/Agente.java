@@ -5,6 +5,8 @@ package br.uffs.cc.jarena;
  * morrer.
  * 
  * Fernando Bevilacqua <fernando.bevilacqua@uffs.edu.br>
+ * 
+ * Autores do Fork: Eduardo Junior Feltrin, Eduardo Marangoni.
  */
 
 abstract public class Agente extends Entidade
